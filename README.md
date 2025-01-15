@@ -40,11 +40,3 @@ Detailed usage instructions will be added once the project reaches a more stable
 ## Contributing 🤝
 
 We welcome contributions! Please check the [issues](https://github.com/RadinPirouz/Kuber-Anisble/issues) for tasks that need attention. Before contributing, ensure you have read our contribution guidelines (to be added).
-
-## License 📄
-
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/RadinPirouz/Kuber-Anisble/blob/main/LICENSE) file for details.
-
-## Acknowledgments 🙏
-
-Special thanks to all contributors and the open-source community for their invaluable support and resources.
