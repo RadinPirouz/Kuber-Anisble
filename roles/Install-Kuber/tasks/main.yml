@@ -1,0 +1,37 @@
+---
+- name: install dependency
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gpg
+- name: unlink old resolv conf
+  ansible.builtin.shell:
+    cmd: unlink /etc/resolv.conf
+- name: copy new resolv.conf
+  ansible.builtin.copy:
+    src: resolv.conf
+    dest: /etc/resolv.conf
+- name: remove old license
+  ansible.builtin.shell:
+    cmd: rm -rf /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+- name: get k8s license
+  ansible.builtin.shell:
+    cmd: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+- name: add k8s repo
+  ansible.builtin.shell:
+    cmd: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+- name: update apt repo list
+  ansible.builtin.apt:
+    update_cache: yes
+- name: install kube pack
+  ansible.builtin.apt:
+    name: "{{ item  }}"
+    state: present
+  loop:
+    - kubelet
+    - kubeadm
+    - kubectl
