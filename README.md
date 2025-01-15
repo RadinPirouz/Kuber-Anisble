@@ -1,6 +1,6 @@
 # Kuber-Anisble 🚧
 
-**Status: Work in Progress** 🛠️
+# **Status: Work in Progress** 🛠️
 
 Welcome to the **Kuber-Anisble** repository! This project aims to provide Ansible playbooks for automating Kubernetes deployments. Please note that this repository is currently under development and not yet ready for production use. Stay tuned for updates! 😊
 
