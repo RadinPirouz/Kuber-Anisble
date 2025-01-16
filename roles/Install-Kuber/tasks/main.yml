@@ -8,25 +8,34 @@
     - ca-certificates
     - curl
     - gpg
+
 - name: unlink old resolv conf
-  ansible.builtin.shell:
-    cmd: unlink /etc/resolv.conf
+  ansible.builtin.file:
+    path: /etc/resolv.conf
+    state: absent
+
 - name: copy new resolv.conf
-  ansible.builtin.copy:
-    src: resolv.conf
+  ansible.builtin.template:
+    src: resolv.conf.j2
     dest: /etc/resolv.conf
+
 - name: remove old license
-  ansible.builtin.shell:
-    cmd: rm -rf /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  ansible.builtin.file:
+    path: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    state: absent
+
 - name: get k8s license
   ansible.builtin.shell:
     cmd: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
 - name: add k8s repo
   ansible.builtin.shell:
     cmd: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
 - name: update apt repo list
   ansible.builtin.apt:
     update_cache: yes
+
 - name: install kube pack
   ansible.builtin.apt:
     name: "{{ item  }}"
@@ -35,3 +44,8 @@
     - kubelet
     - kubeadm
     - kubectl
+
+- name: Ensure kubelet service is enabled
+  ansible.builtin.service:
+    name: kubelet
+    enabled: yes
