@@ -1,7 +1,6 @@
----
 - name: install dependency
   ansible.builtin.apt:
-    name: "{{ item }}"
+    name: '{{ item }}'
     state: present
   loop:
     - apt-transport-https
@@ -24,21 +23,43 @@
     path: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
     state: absent
 
-- name: get k8s license
-  ansible.builtin.shell:
-    cmd: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+- name: Ensure /etc/apt/keyrings directory exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Download Kubernetes release key
+  get_url:
+    url: '{{ key_url }}'
+    dest: /tmp/kubernetes-release.key
+    mode: '0644'
+
+- name: Convert GPG key to dearmored format
+  community.crypto.gpg_key:
+    state: present
+    key: /tmp/kubernetes-release.key
+    keyring: '{{ keyring_path }}'
+    armored: 'no'
+
+- name: Clean up temporary key file
+  file:
+    path: /tmp/kubernetes-release.key
+    state: absent
 
 - name: add k8s repo
   ansible.builtin.shell:
-    cmd: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+    cmd: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg]https://pkgs.k8s.io/core:/stable:/v{{ kuber_version }}/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 - name: update apt repo list
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: 'yes'
 
 - name: install kube pack
   ansible.builtin.apt:
-    name: "{{ item  }}"
+    name: '{{ item  }}'
     state: present
   loop:
     - kubelet
@@ -48,4 +69,4 @@
 - name: Ensure kubelet service is enabled
   ansible.builtin.service:
     name: kubelet
-    enabled: yes
+    enabled: 'yes'
