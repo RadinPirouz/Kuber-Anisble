@@ -25,7 +25,7 @@
 
 - name: get k8s license
   ansible.builtin.shell:
-    cmd: curl -fsSL https://pkgs.k8s.io/core:/stable:/v{{ kuber_verison }}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    cmd: curl -fsSL https://pkgs.k8s.io/core:/stable:/v{{ kuber_version }}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 - name: add k8s repo
   ansible.builtin.shell:
