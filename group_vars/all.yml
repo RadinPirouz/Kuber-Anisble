@@ -1,4 +1,4 @@
 ---
 dns1: 10.202.10.202
 dns2: 178.22.122.100
-kuber_version: 1.32
+kuber_version: "1.30"
