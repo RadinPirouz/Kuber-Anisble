@@ -1,0 +1,33 @@
+---
+- name: unlink old resolv conf
+  ansible.builtin.file:
+    path: /etc/resolv.conf
+    state: absent
+
+- name: copy new resolv.conf
+  ansible.builtin.template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+
+- name: Disable Swap
+  ansible.builtin.shell:
+    cmd: swapoff -a
+
+- name: Ensure swap is disabled in /etc/fstab
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^.*swap.*$'
+    replace: '# \g<0>'
+
+- name: install dependency
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: present
+    update_cache: yes
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gpg
+
+
