@@ -18,6 +18,16 @@
     path: /etc/apt/sources.list.d/kubernetes.list
     state: absent
 
+- name: Disable Swap
+  ansible.builtin.shell:
+    cmd: swapoff -a
+
+- name: Ensure swap is disabled in /etc/fstab
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^.*swap.*$'
+    replace: '# \g<0>'
+
 - name: install dependency
   ansible.builtin.apt:
     name: '{{ item }}'
