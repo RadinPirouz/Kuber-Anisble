@@ -28,7 +28,18 @@
     - kubeadm
     - kubectl
 
+- name: hold kube pack
+  ansible.builtin.dpkg_selections:
+    name: '{{ item }}'
+    selection: hold
+  loop:
+    - kubelet
+    - kubeadm
+    - kubectl
+
 - name: Ensure kubelet service is enabled
   ansible.builtin.service:
     name: kubelet
     enabled: 'yes'
+
+
