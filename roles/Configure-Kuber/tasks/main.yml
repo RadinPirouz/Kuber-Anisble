@@ -1,0 +1,18 @@
+---
+- name: Generate containerd default configuration
+  ansible.builtin.shell: containerd config default
+  register: containerd_config_output
+
+- name: Write containerd configuration to /etc/containerd/config.toml
+  ansible.builtin.copy:
+    dest: /etc/containerd/config.toml
+    content: "{{ containerd_config_output.stdout }}"
+    owner: root
+    group: root
+    mode: '0644'
+- name: Update SystemdCgroup to true in containerd config
+  ansible.builtin.replace:
+    path: /etc/containerd/config.toml
+    regexp: '^SystemdCgroup = false'
+    replace: 'SystemdCgroup = true'
+  notify: restart containerd

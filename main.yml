@@ -5,3 +5,4 @@
     - Install-Prerequisites
     - Install-Docker
     - Install-Kuber
+    - Configure-Kuber
