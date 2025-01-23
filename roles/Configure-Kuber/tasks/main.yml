@@ -37,3 +37,11 @@
     - br_netfilter
     - overlay
 
+- name: Ensure net.ipv4.ip_forward is enabled in sysctl.conf
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.conf
+    regexp: '^#?net\.ipv4\.ip_forward='
+    line: 'net.ipv4.ip_forward=1'
+    state: present
+    backup: yes
+
