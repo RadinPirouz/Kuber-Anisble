@@ -10,9 +10,30 @@
     owner: root
     group: root
     mode: '0644'
+
 - name: Update SystemdCgroup to true in containerd config
   ansible.builtin.replace:
     path: /etc/containerd/config.toml
-    regexp: '^SystemdCgroup = false'
-    replace: 'SystemdCgroup = true'
+    regexp: '^(\s*SystemdCgroup\s*=\s*)false'
+    replace: '\1true'
   notify: restart containerd
+
+
+
+- name: Load kernel modules
+  ansible.builtin.modprobe:
+    name: "{{ item }}"
+  with_items:
+    - br_netfilter
+    - overlay
+
+
+- name: Ensure kernel modules are loaded
+  ansible.builtin.lineinfile:
+    path: /etc/modules-load.d/modules.conf
+    line: "{{ item }}"
+    state: present
+  loop:
+    - br_netfilter
+    - overlay
+
