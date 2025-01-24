@@ -1,4 +1,6 @@
 ---
 dns1: 10.202.10.202
 dns2: 178.22.122.100
+cluster_cp_ip: 10.20.10.150
+network_cidr_range: 10.244.0.0/16
 kuber_version: "1.30"

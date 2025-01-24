@@ -1,0 +1,7 @@
+---
+- name: Init Cluster
+  ansible.builtin.shell:
+    cmd: kubeadm init --apiserver-advertise-address '{{ cluster_cp_ip }}' --pod-network-cidr '{{ network_cidr_range }}' >> kuber-setup.log
+- name: Deploying flannel Network
+  ansible.builtin.shell:
+    cmd: kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml >> flanned-setup.log

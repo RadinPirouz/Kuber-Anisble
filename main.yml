@@ -1,8 +1,14 @@
 ---
-- hosts: all
+- name: Setup Cluster
+  hosts: all
   become: yes
   roles:
     - Install-Prerequisites
-    - Install-Docker
+    #    - Install-Docker
     - Install-Kuber
     - Configure-Kuber
+- name: Setup Control Plane
+  hosts: cp
+  become: yes
+  roles:
+    - Init-Kuber-CP
