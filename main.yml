@@ -4,9 +4,9 @@
   become: yes
   roles:
     - Install-Prerequisites
-    #    - Install-Docker
-    - Install-Kuber
-    - Configure-Kuber
+    - Install-Docker
+    #    - Install-Kuber
+    #- Configure-Kuber
 - name: Setup Control Plane
   hosts: cp
   become: yes
